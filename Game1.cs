@@ -30,16 +30,18 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.1f, 100f);
-        _player = new Player(new Vector3(0,5,10));
+        _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.1f, 500f);
+        _player = new Player(new Vector3(0,5,-10));
         base.Initialize();
     }
 
+    private Texture2D _backgroundTexture;
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _model = Content.Load<Model>("Cube");
         // TODO: use this.Content to load your game content here
+        _backgroundTexture = Content.Load<Texture2D>("Skybox");
         for (int x = -5; x < 5; x++){
             for (int y = 0;y < 2; y++){
                 for (int z = -5; z < 5; z++){
@@ -52,21 +54,19 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
         // TODO: Add your update logic here
         _player.Update(gameTime);
-        base.Update(gameTime);
+        Mouse.SetPosition(Window.ClientBounds.Width / 2,Window.ClientBounds.Height/2);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-        _view = Matrix.CreateLookAt(
-            _player.Position + new Vector3(0,2,10),
-            _player.Position,
-            Vector3.Up);
+        _view = _player.GetViewMatrix();
         foreach(var block in _blocks){
             foreach (var mesh in block.BlockModel.Meshes){
                 foreach (BasicEffect effect in mesh.Effects){
