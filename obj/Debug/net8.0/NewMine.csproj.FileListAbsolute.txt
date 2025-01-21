@@ -18,6 +18,7 @@ C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.Generated
 C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.AssemblyInfoInputs.cache
 C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.AssemblyInfo.cs
 C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.csproj.CoreCompileInputs.cache
+C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.sourcelink.json
 C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.csproj.Up2Date
 C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\NewMine.dll
 C:\Users\Utente\WorkProjects\Monogame\NewMine\obj\Debug\net8.0\refint\NewMine.dll

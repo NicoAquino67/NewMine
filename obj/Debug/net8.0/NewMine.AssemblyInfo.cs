@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NewMine")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c146b99da748e36258f259200c6fdc1ffb1ffec")]
 [assembly: System.Reflection.AssemblyProductAttribute("NewMine")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NewMine")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
