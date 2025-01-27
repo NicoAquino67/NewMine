@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using Microsoft.Xna.Framework;
@@ -39,11 +40,13 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
+        try{
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _model = Content.Load<Model>("Cube");
         // TODO: use this.Content to load your game content here
-        _skyboxModel = Content.Load<Model>("Cube");
-        _skyboxTexture = Content.Load<Texture2D>("skybox");
+        _skyboxModel = Content.Load<Model>("skybox/Skybox");
+        _skyboxTexture = Content.Load<Texture2D>("skybox/Textures/skybox");
 
         for (int x = -5; x < 5; x++){
             for (int y = 0;y < 2; y++){
@@ -53,24 +56,34 @@ public class Game1 : Game
                 }
             }
         }
-    }
-    private void DrawSkybox(){
-        GraphicsDevice.RasterizerState = new RasterizerState{CullMode = CullMode.CullCounterClockwiseFace};
-        foreach (var mesh in _skyboxModel.Meshes){
-            foreach (BasicEffect effect in mesh.Effects){
-                effect.World = Matrix.CreateTranslation(Vector3.Zero);
-                effect.View = _player.GetViewMatrix();
-                effect.Projection = _projection;
-                effect.TextureEnabled = true;
-                effect.Texture = _skyboxTexture;
-            }
-            mesh.Draw();
         }
-        GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+        catch(Exception ex){
+            Debug.WriteLine($"Error in LoadContent: {ex.Message}");
+            Exit();
+        }
     }
+    private void DrawSkybox()
+{
+    GraphicsDevice.DepthStencilState = DepthStencilState.None; // Deshabilita el Z-buffer para que siempre se dibuje detrás
+    foreach (var mesh in _skyboxModel.Meshes)
+    {
+        foreach (BasicEffect effect in mesh.Effects)
+        {
+            effect.World = Matrix.CreateScale(100f); // Ajusta el tamaño si es necesario
+            effect.View = _view; // Matriz de vista de la cámara
+            effect.Projection = _projection; // Matriz de proyección
+            effect.TextureEnabled = true; // Activa el uso de texturas
+        }
+        mesh.Draw();
+    }
+    GraphicsDevice.DepthStencilState = DepthStencilState.Default; // Reactiva el Z-buffer
+}
+
 
     protected override void Update(GameTime gameTime)
     {
+        try {
+
         base.Update(gameTime);
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
@@ -78,26 +91,40 @@ public class Game1 : Game
         // TODO: Add your update logic here
         _player.Update(gameTime);
         Mouse.SetPosition(Window.ClientBounds.Width / 2,Window.ClientBounds.Height/2);
+        }
+        catch (Exception ex) {
+            Debug.WriteLine($"error in update: {ex.Message}");
+            Exit();
+        }
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
-        _view = _player.GetViewMatrix();
-        DrawSkybox();
-        foreach(var block in _blocks){
-            foreach (var mesh in block.BlockModel.Meshes){
-                foreach (BasicEffect effect in mesh.Effects){
-                    effect.World = Matrix.CreateTranslation(block.Position);
-                    effect.View = _view;
-                    effect.Projection = _projection;
-                    effect.EnableDefaultLighting();
-                }
-            mesh.Draw();
+        try{
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            _view = _player.GetViewMatrix();
+            DrawSkybox();
+            foreach(var block in _blocks){
+                foreach (var mesh in block.BlockModel.Meshes){
+                    foreach (BasicEffect effect in mesh.Effects){
+                        effect.World = Matrix.CreateTranslation(block.Position);
+                        effect.View = _view;
+                        effect.Projection = _projection;
+                        effect.EnableDefaultLighting();
+                    }
+                mesh.Draw();
+                Debug.WriteLine($"player mouse yaw: {_player.Yaw}");            
+                Debug.WriteLine($"player mouse pitch: {_player.Pitch}");
+                Debug.WriteLine($"player screenheight: {_player.screenHeight}");
+                Debug.WriteLine($"player screenwidth: {_player.screenWidth}");
+                }   
+                // TODO: Add your drawing code here
+                base.Draw(gameTime);
             }
         }
-        // TODO: Add your drawing code here
-        
-        base.Draw(gameTime);
+        catch(Exception ex) {
+            Debug.WriteLine($"Error in Draw: {ex.Message}");
+            Exit();
+        }
     }
 }

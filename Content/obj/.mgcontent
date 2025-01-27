@@ -4,13 +4,11 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Utente/WorkProjects/Monogame/NewMine/Content/cloud1.png</File>
     <File>C:/Users/Utente/WorkProjects/Monogame/NewMine/Content/Cube.fbx</File>
-    <File>C:/Users/Utente/WorkProjects/Monogame/NewMine/Content/icon.png</File>
-    <File>C:/Users/Utente/WorkProjects/Monogame/NewMine/Content/skybox.png</File>
+    <File>C:/Users/Utente/WorkProjects/Monogame/NewMine/Content/skybox/Skybox.fbx</File>
+    <File>C:/Users/Utente/WorkProjects/Monogame/NewMine/Content/skybox/Textures/skybox.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
