@@ -22,7 +22,7 @@ public class Game1 : Game
 
     private List<Block> _blocks = new List<Block>();
 
-
+    //ToDo: Bugfix: Skybox, texturas de bloques, personaje.
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);

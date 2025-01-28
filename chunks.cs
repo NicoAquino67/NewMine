@@ -14,4 +14,5 @@ public class Block
         Position = position;
         BlockModel = blockModel;
     }
+    //ToDo: Generacion de mundo a partir de ruido.
 }

@@ -34,7 +34,10 @@ namespace NewMine {
             return Matrix.CreateLookAt(Position, target, Vector3.Up);
         }
         public void Update(GameTime gameTime){
-            
+            CameraControl();
+            //ToDo: Movimiento del Player.
+        }        
+        private void CameraControl() {
             //lee el raton
             MouseState mouseState = Mouse.GetState();
             int deltaX = mouseState.X - (ScreenWidth/2);
@@ -54,6 +57,6 @@ namespace NewMine {
             
             //vuelve a centrar el raton
             Mouse.SetPosition(ScreenWidth / 2, ScreenHeight / 2);
-        }        
+        }
     }
 }
