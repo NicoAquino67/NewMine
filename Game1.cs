@@ -33,14 +33,17 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 0.1f, 500f);
-        _player = new Player(new Vector3(0,5,-10));
+        _projection = Matrix.CreatePerspectiveFieldOfView(
+            MathHelper.PiOver4, 
+            GraphicsDevice.Viewport.AspectRatio, 0.1f, 500f);
+        _player = new Player(new Vector3(0,5,-10), 
+            GraphicsDevice.Viewport.Width,
+            GraphicsDevice.Viewport.Height);
         base.Initialize();
     }
 
-    protected override void LoadContent()
-    {
-        try{
+    protected override void LoadContent(){
+    try{
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _model = Content.Load<Model>("Cube");
@@ -56,11 +59,11 @@ public class Game1 : Game
                 }
             }
         }
-        }
-        catch(Exception ex){
+    }
+    catch(Exception ex){
             Debug.WriteLine($"Error in LoadContent: {ex.Message}");
             Exit();
-        }
+    }
     }
     private void DrawSkybox()
 {
@@ -82,20 +85,15 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        try {
-
-        base.Update(gameTime);
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
-        // TODO: Add your update logic here
+    try {
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
         _player.Update(gameTime);
-        Mouse.SetPosition(Window.ClientBounds.Width / 2,Window.ClientBounds.Height/2);
-        }
-        catch (Exception ex) {
+        base.Update(gameTime);
+    }
+    catch (Exception ex) {
             Debug.WriteLine($"error in update: {ex.Message}");
             Exit();
-        }
+    }
     }
 
     protected override void Draw(GameTime gameTime)
@@ -113,10 +111,6 @@ public class Game1 : Game
                         effect.EnableDefaultLighting();
                     }
                 mesh.Draw();
-                Debug.WriteLine($"player mouse yaw: {_player.Yaw}");            
-                Debug.WriteLine($"player mouse pitch: {_player.Pitch}");
-                Debug.WriteLine($"player screenheight: {_player.screenHeight}");
-                Debug.WriteLine($"player screenwidth: {_player.screenWidth}");
                 }   
                 // TODO: Add your drawing code here
                 base.Draw(gameTime);
