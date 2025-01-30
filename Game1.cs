@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.Http;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,7 +21,7 @@ public class Game1 : Game
 
     private List<Block> _blocks = new List<Block>();
 
-    //ToDo: Bugfix: Skybox, texturas de bloques, personaje.
+    //ToDo: Bugfix: , texturas de bloques, personaje.
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -32,68 +31,86 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
         _projection = Matrix.CreatePerspectiveFieldOfView(
             MathHelper.PiOver4, 
             GraphicsDevice.Viewport.AspectRatio, 0.1f, 500f);
-        _player = new Player(new Vector3(0,5,-10), 
+        _player = new Player(new Vector3(3,6,-10), 
             GraphicsDevice.Viewport.Width,
             GraphicsDevice.Viewport.Height);
         base.Initialize();
     }
 
     protected override void LoadContent(){
-    try{
-
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-        _model = Content.Load<Model>("Cube");
-        // TODO: use this.Content to load your game content here
-        _skyboxModel = Content.Load<Model>("skybox/Skybox");
-        _skyboxTexture = Content.Load<Texture2D>("skybox/Textures/skybox");
-
-        for (int x = -5; x < 5; x++){
-            for (int y = 0;y < 2; y++){
-                for (int z = -5; z < 5; z++){
-                    var position = new Vector3(x*2,y*2,z*2);
-                    _blocks.Add(new Block(position, _model));
+        try{
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _model = Content.Load<Model>("blocks/dirt/dirt");
+            _skyboxModel = Content.Load<Model>("skybox/Skybox");
+            _skyboxTexture = Content.Load<Texture2D>("skybox/Textures/skybox");
+            for (int x = -10; x < 10; x++)
+            {
+                for (int y = 0; y < 1; y++)
+                {
+                    for (int z = -10; z < 10; z++)
+                    {
+                        var position = new Vector3(x * 2, y * 2, z * 2);
+                        _blocks.Add(new Block(position, _model));
+                    }
                 }
             }
         }
-    }
-    catch(Exception ex){
-            Debug.WriteLine($"Error in LoadContent: {ex.Message}");
-            Exit();
-    }
-    }
-    private void DrawSkybox()
-{
-    GraphicsDevice.DepthStencilState = DepthStencilState.None; // Deshabilita el Z-buffer para que siempre se dibuje detrás
-    foreach (var mesh in _skyboxModel.Meshes)
-    {
-        foreach (BasicEffect effect in mesh.Effects)
-        {
-            effect.World = Matrix.CreateScale(100f); // Ajusta el tamaño si es necesario
-            effect.View = _view; // Matriz de vista de la cámara
-            effect.Projection = _projection; // Matriz de proyección
-            effect.TextureEnabled = true; // Activa el uso de texturas
+        catch(Exception ex){
+                Debug.WriteLine($"Error in LoadContent: {ex.Message}");
+                Exit();
         }
-        mesh.Draw();
     }
-    GraphicsDevice.DepthStencilState = DepthStencilState.Default; // Reactiva el Z-buffer
-}
+    
+    private void DrawSkybox()
+    {
+        GraphicsDevice.DepthStencilState = DepthStencilState.None;
+        foreach (var mesh in _skyboxModel.Meshes)
+        {
+            foreach (BasicEffect effect in mesh.Effects)
+            {   
+                effect.Texture = _skyboxTexture;
+                effect.World = Matrix.CreateScale(100f) * Matrix.CreateTranslation(_player.Position);
+                effect.View = _view;
+                effect.Projection = _projection;
+                effect.TextureEnabled = true;
+            }
+            mesh.Draw();
+        }
+        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+    }
 
+    private void DrawBlocks(){
+        
+        foreach (var block in _blocks)
+        {
+            foreach (var mesh in block.BlockModel.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.World = Matrix.CreateTranslation(block.Position);
+                    effect.View = _view;
+                    effect.Projection = _projection;
+                    effect.EnableDefaultLighting();
+                }
+                mesh.Draw();
+            }
+        }
+    }
 
     protected override void Update(GameTime gameTime)
     {
-    try {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-        _player.Update(gameTime);
-        base.Update(gameTime);
-    }
-    catch (Exception ex) {
-            Debug.WriteLine($"error in update: {ex.Message}");
-            Exit();
-    }
+        try {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            _player.Update(gameTime);
+            base.Update(gameTime);
+        }
+        catch (Exception ex) {
+                Debug.WriteLine($"error in update: {ex.Message}");
+                Exit();
+        }
     }
 
     protected override void Draw(GameTime gameTime)
@@ -102,19 +119,8 @@ public class Game1 : Game
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _view = _player.GetViewMatrix();
             DrawSkybox();
-            foreach(var block in _blocks){
-                foreach (var mesh in block.BlockModel.Meshes){
-                    foreach (BasicEffect effect in mesh.Effects){
-                        effect.World = Matrix.CreateTranslation(block.Position);
-                        effect.View = _view;
-                        effect.Projection = _projection;
-                        effect.EnableDefaultLighting();
-                    }
-                mesh.Draw();
-                }   
-                // TODO: Add your drawing code here
-                base.Draw(gameTime);
-            }
+            DrawBlocks();
+            base.Draw(gameTime);
         }
         catch(Exception ex) {
             Debug.WriteLine($"Error in Draw: {ex.Message}");
